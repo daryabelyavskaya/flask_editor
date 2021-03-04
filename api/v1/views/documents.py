@@ -16,9 +16,9 @@ class DocumentsListView(Resource):
     @api.expect(document_update_schema)
     def post(self):
         content = request.get_json(silent=True)
-        result = database.create_document(content)
-        if result.inserted_id:
+        if database.doc_name_exists(content["name"]):
             return {}, 404
+        result = database.create_document(content)
         return {'id': str(result.inserted_id)}, 200
 
     @api.marshal_with(document_return_schema)
@@ -34,6 +34,7 @@ class DocumentsDetailView(Resource):
     def patch(self, id):
         content = request.get_json(silent=True)
         result = database.update_document(content, id)
+        print(result.modified_count)
         if not result.modified_count:
             return {}, 404
         return {}, 200

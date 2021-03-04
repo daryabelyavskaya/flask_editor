@@ -10,22 +10,25 @@ DATABASE_NAME = 'editor'
 
 class MongoDB:
 
-    def __init__(self) -> Optional:
+    def __init__(self) -> Optional[None]:
         client = self.connect()
         self.db = client[DATABASE_NAME]
+
+    def doc_name_exists(self, name) -> dict:
+        return self.db.documents.find_one({'name': name})
 
     @staticmethod
     def connect() -> MongoClient:
         return MongoClient()
 
-    def get_document(self, args) -> Optional[dict]:
-        document = self.db.documents.find_one({'_id': ObjectId(args)})
+    def get_document(self, doc_id: str) -> Optional[dict]:
+        document = self.db.documents.find_one({'_id': ObjectId(doc_id)})
         return dict(document) if document else None
 
     def get_documents(self) -> list:
         return list(self.db.documents.find())
 
-    def create_document(self, args: str):
+    def create_document(self, args: dict) -> int:
         return self.db.documents.insert_one({
             'name': args['name'],
             'status': "Creating",
@@ -33,12 +36,13 @@ class MongoDB:
             'content': args["content"]
         })
 
-    def delete_post(self, args):
-        return self.db.documents.delete_one({'_id': ObjectId(args)})
+    def delete_post(self, doc_id: str) -> int:
+        return self.db.documents.delete_one({'_id': ObjectId(doc_id)})
 
-    def update_document(self, args, post_id):
+    def update_document(self, args: dict, doc_id: str) -> int:
+        print(args)
         return self.db.documents.update_one(
-            {'_id': ObjectId(post_id)},
+            {'_id': ObjectId(doc_id)},
             {'$set': args}
         )
 
