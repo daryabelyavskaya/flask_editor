@@ -2,7 +2,8 @@ from flask import request
 from flask_restplus import Namespace
 from flask_restplus import Resource
 
-from api.v1.schemas import document_create_schema, document_return_schema, document_update_schema
+from modules.app.api import document_create_schema, \
+    document_return_schema, document_update_schema
 from databases.mongodb import database
 
 api = Namespace(name="documents")

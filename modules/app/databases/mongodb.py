@@ -40,7 +40,6 @@ class MongoDB:
         return self.db.documents.delete_one({'_id': ObjectId(doc_id)})
 
     def update_document(self, args: dict, doc_id: str) -> int:
-        print(args)
         return self.db.documents.update_one(
             {'_id': ObjectId(doc_id)},
             {'$set': args}

@@ -10,7 +10,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   toolbar: {
-    paddingRight: 24, // keep right padding when drawer closed
+    paddingRight: 24, 
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
@@ -31,7 +31,7 @@ export default function Bar() {
     <AppBar position="absolute" className={classes.appBar}>
       <Toolbar className={classes.toolbar}>
 	<Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-	  Documents Editor
+	  Zesla Group Document Editor
 	</Typography>
     
       </Toolbar>

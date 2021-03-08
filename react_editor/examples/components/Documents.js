@@ -8,7 +8,6 @@ import { compose } from 'recompose'
 import { find } from 'lodash';
 import 'jodit';
 import 'jodit/build/jodit.min.css';
-
 import {
   withStyles,
   Fab,
@@ -26,7 +25,8 @@ import {
 import From from './From'
 import Common from './common/Common'
 import DocumentForm from './DocumentForm'
-
+import LogInForm from './UserForm'
+import {  authenticationService } from './AuthService';
 const APP_API = process.env.APP_API || "http://127.0.0.1:5000/api/v1/" ;
 
 require("regenerator-runtime/runtime");
@@ -44,25 +44,29 @@ const styles = theme => ({
 });
 
 
-
 class DocumentManager extends React.Component {
+
+
   constructor(props) {
     super(props);
     this.state = {
-        loading: true,
         documents: [],
         error: null,
         isEdit: false,
         editId: '',
-        modal: false
+        modal: false,
+        auth: false,
+        currentUser: null
     };
   }
+  
   async fetch(method, endpoint, body) {
     try {
       const response = await fetch(`${APP_API}${endpoint}`, {
         method,
         body: body && JSON.stringify(body),
         headers: {
+          'Authorization': 'Bearer '+ `${JSON.parse(localStorage.getItem('currentUser')).token}`,
           'content-type': 'application/json',
           accept: 'application/json',
         },
@@ -74,7 +78,9 @@ class DocumentManager extends React.Component {
       this.setState({ error });
     }
   }
+
   componentDidMount() {
+    authenticationService.currentUser.subscribe(x => this.setState({ currentUser: x }))
     this.getDocuments();
   }
 
@@ -84,13 +90,19 @@ class DocumentManager extends React.Component {
               loading: false,
               documents: (await this.fetch('get', 'documents/')) || []
           });
-    }
+  }
+  getUser = async (user) => {
+    let response= await authenticationService.login(user['username'],user['password'])
+    let user_info=await response.json()
+    localStorage.setItem('currentUser', JSON.stringify(user_info));
+    console.log("ZAEBALO")
+    console.log( JSON.parse(localStorage.getItem('currentUser')))
 
+  }
 
-   postDocuments = async (document) => {
+  postDocuments = async (document) => {
         document['status']="Creating"
         document['content']=""
-        console.log(document)
         await this.fetch('post', 'documents/',document );
         this.handleModalClose()
         this.getDocuments();
@@ -123,6 +135,14 @@ class DocumentManager extends React.Component {
    }
   render() {
     const { classes } = this.props;
+    if (!this.state.auth){
+      return(
+        <Common>
+          <LogInForm onSave={this.getUser}></LogInForm>
+        </Common>
+      )
+    }
+    else{
     if (this.state.isEdit){
       return(
         <Common>
@@ -135,8 +155,10 @@ class DocumentManager extends React.Component {
     else{
     if (this.state.modal){
       return(
+        <Common>
         <DocumentForm  onSave={this.postDocuments} handleModalClose= {this.handleModalClose}>
         </DocumentForm>
+        </Common>
       )
     }
     else{
@@ -185,6 +207,7 @@ class DocumentManager extends React.Component {
           </Common>
     );
   }
+}
 }
 }
 }

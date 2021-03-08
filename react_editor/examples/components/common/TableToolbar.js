@@ -4,8 +4,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { withStyles } from "@material-ui/core/styles";
 
-import {Link} from 'react-router-dom';
-
 
 const defaultToolbarStyles = {
   iconButton: {
@@ -27,8 +25,6 @@ class CustomToolbar extends React.Component {
           <IconButton
                 className={classes.iconButton}
                 onClick={this.handleClick}
-                component={Link}
-                to={this.props.redirectLink}
             >
             <AddIcon className={classes.deleteIcon} />
           </IconButton>

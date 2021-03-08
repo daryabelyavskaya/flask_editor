@@ -12,8 +12,7 @@ const From = ({ document,  handleOffisEdit }) => {
 		readonly: false,
 		toolbar: true,
 	})
-
-	let textArea=''
+	
 	const [textAreaValue, setTextAreaValue] = useState(document.content)
 
 	const [inputValue, setInputValue] = useState('')
@@ -39,14 +38,17 @@ const From = ({ document,  handleOffisEdit }) => {
 	};
 
 	const handleTextAreaChange = newTextAreaValue => {
+		document.content=newTextAreaValue
 		return (
+
 			setTextAreaValue(() => newTextAreaValue)
+			
+
 		)
 	}
 
 	const handleInputChange = e => {
 		const {value} = e.target
-		setInputValue(() => value)
 		handleTextAreaChange(value)
 	}
 	const  perfom_fetch  = async (method, endpoint, body) =>{
@@ -66,23 +68,20 @@ const From = ({ document,  handleOffisEdit }) => {
 		  this.setState({ error });
 		}
 	}
-	const saveDocuments =  async (textAreaValue) =>{
-		let value=''
-		value=setTextAreaValue(() => value)
-		console.log(value)
-		await perfom_fetch('patch', `documents/${document._id}/`, {"content": value});
+	const saveDocuments =  async () =>{
+		await perfom_fetch('patch', `documents/${document._id}/`, {"content": document.content});
 		
 	}
 	
 	const handleSpin = () => setSpin(spin => ++spin)
 	return (
 		<div>
-			<button  onClick={(textAreaValue) => saveDocuments()}>
-				{'Save'}
-			</button>
 		<div >
 			<button  onClick={handleOffisEdit}>Back</button>
 		</div>
+		<button  onClick={(textAreaValue) => saveDocuments()}>
+				{'Save'}
+		</button>
 		<div>
 			<JoditEditor
 				config={config}
