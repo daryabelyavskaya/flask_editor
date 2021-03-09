@@ -4,7 +4,6 @@ import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import { withStyles } from "@material-ui/core/styles";
 
-
 const defaultToolbarStyles = {
   iconButton: {
   },

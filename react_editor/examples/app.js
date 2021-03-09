@@ -3,7 +3,8 @@ import './app.css';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import DictionaryManager from "./components/Documents";
+import DocumentManager from "./components/Documents";
 
 
-ReactDOM.render(<DictionaryManager/>, document.getElementById('editor'));
+
+ReactDOM.render(<DocumentManager/>, document.getElementById('editor'));

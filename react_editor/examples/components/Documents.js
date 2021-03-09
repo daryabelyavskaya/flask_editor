@@ -50,13 +50,14 @@ class DocumentManager extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+        loading: true,
         documents: [],
         error: null,
         isEdit: false,
         editId: '',
         modal: false,
         auth: false,
-        currentUser: null
+        token: null
     };
   }
   
@@ -66,7 +67,7 @@ class DocumentManager extends React.Component {
         method,
         body: body && JSON.stringify(body),
         headers: {
-          'Authorization': 'Bearer '+ `${JSON.parse(localStorage.getItem('currentUser')).token}`,
+          'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser')).user.token}`,
           'content-type': 'application/json',
           accept: 'application/json',
         },
@@ -95,8 +96,9 @@ class DocumentManager extends React.Component {
     let response= await authenticationService.login(user['username'],user['password'])
     let user_info=await response.json()
     localStorage.setItem('currentUser', JSON.stringify(user_info));
-    console.log("ZAEBALO")
-    console.log( JSON.parse(localStorage.getItem('currentUser')))
+    if (user_info['ok']){
+      this.setState({auth: true})
+    }
 
   }
 
@@ -105,7 +107,7 @@ class DocumentManager extends React.Component {
         document['content']=""
         await this.fetch('post', 'documents/',document );
         this.handleModalClose()
-        this.getDocuments();
+        this.getDocuments()
   }
   
    async deleteDocument(document) {
@@ -135,7 +137,7 @@ class DocumentManager extends React.Component {
    }
   render() {
     const { classes } = this.props;
-    if (!this.state.auth){
+    if (!JSON.parse(localStorage.getItem('currentUser')).user.token){
       return(
         <Common>
           <LogInForm onSave={this.getUser}></LogInForm>

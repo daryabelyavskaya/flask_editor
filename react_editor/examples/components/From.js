@@ -57,6 +57,7 @@ const From = ({ document,  handleOffisEdit }) => {
 			method,
 			body: body && JSON.stringify(body),
 			headers: {
+			'Authorization': `Bearer ${JSON.parse(localStorage.getItem('currentUser')).user.token}`,
 			  'content-type': 'application/json',
 			  accept: 'application/json',
 			},
