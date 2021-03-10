@@ -57,7 +57,8 @@ class DocumentManager extends React.Component {
         editId: '',
         modal: false,
         auth: false,
-        token: null
+        token: null,
+        st: false
     };
   }
   
@@ -99,7 +100,8 @@ class DocumentManager extends React.Component {
     if (user_info['ok']){
       this.setState({auth: true})
     }
-
+    this.setState({st:true})
+    this.getDocuments()
   }
 
   postDocuments = async (document) => {
@@ -118,7 +120,6 @@ class DocumentManager extends React.Component {
   renderDocumentEditor = ( _id ) => {
       if (this.state.loading) return null;
       const document = find(this.state.documents, { _id: _id });
-      if (!document && _id !== 'new') return <Redirect to="/" />;
       return <From document={document}  handleOffisEdit={this.handleOffisEdit} />;
     };
   handleIsEdit(_id){
@@ -137,7 +138,7 @@ class DocumentManager extends React.Component {
    }
   render() {
     const { classes } = this.props;
-    if (!JSON.parse(localStorage.getItem('currentUser')).user.token){
+    if (!this.state.st){
       return(
         <Common>
           <LogInForm onSave={this.getUser}></LogInForm>

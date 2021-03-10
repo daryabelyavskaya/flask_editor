@@ -1,7 +1,7 @@
 # flask_editor
 This is text editor based on FlaskRestPlus + React + MongoDB. In this editor you can create, edit, delete documents. To access the documents, you need to be registered in the database by the user and log in.
 
-## Install
+##Launch
 1. Install the whole requirenments in your venv using:
 	pip install -r requirements.txt
 2. Connect the mongodb:

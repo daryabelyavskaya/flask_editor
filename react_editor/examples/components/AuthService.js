@@ -11,7 +11,7 @@ export const authenticationService = {
     get currentUserValue () { return currentUserSubject.value }
 };
 
-function login(user) {
+function login(username, password) {
     const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -20,7 +20,6 @@ function login(user) {
 
     return fetch(`${APP_API}users/auth/`, requestOptions)
         .then( user => {
-            // store user details and jwt token in local storage to keep user logged in between page refreshes
             currentUserSubject.next(user);
             return user;
         });
