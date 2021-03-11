@@ -1,0 +1,17 @@
+version: '3.5'
+services:
+ web_dev:
+  build: .
+  ports:
+   - "6000:6000"
+  volumes:
+   - .:/app
+  environment:
+   - ENV=development
+   - PORT=6000
+   - DB=mongodb://mongodb:27017/todoDev
+
+
+networks:
+ default:
+  name: web_dev
